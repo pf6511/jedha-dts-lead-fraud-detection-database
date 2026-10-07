@@ -1,0 +1,23 @@
+[project]
+name = "fraud-detection-database"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "pf6511", email = "pfelz@free.fr" }
+]
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.5.3",
+    "pandas>=3.0.6",
+    "psycopg>=3.3.6",
+    "python-dotenv>=1.2.4",
+    "sqlalchemy>=2.1.2",
+]
+
+[project.scripts]
+fraud-detection-database = "fraud_detection_database:main"
+
+[build-system]
+requires = ["uv_build>=0.12.19,<0.13.0"]
+build-backend = "uv_build"

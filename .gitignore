@@ -1,0 +1,20 @@
+# Data
+data/
+# Python-generated files
+__pycache__/
+.pytest_cache/
+*.py[oc]
+build/
+dist/
+wheels/
+*.egg-info
+
+# Virtual environments
+.venv
+
+# Secrets / credentials
+secrets.env
+
+# IDE
+.vscode/
+.idea/

@@ -1,0 +1,7 @@
+auth:
+  postgresPassword: mysecretpassword
+
+  username: fraud_detection_admin
+  password: fraud_detection_admin_password
+  
+  database: fraud_detection
