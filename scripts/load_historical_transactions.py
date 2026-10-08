@@ -3,11 +3,20 @@ from pathlib import Path
 import pandas as pd
 from sqlalchemy import insert
 
-from fraud_detection_database.database import AdminSessionLocal
+
+from fraud_detection_database.database import Database
+from fraud_detection_database.environment import Environment
+
 from fraud_detection_database.models import HistoricalTransaction
 
 from typing import Any, cast
 
+def create_database_engine():
+    environment = Environment("./secrets.env")
+    return Database(
+        database_url=environment.env_var("DATABASE_URL"),
+        admin_database_url=environment.env_var("ADMIN_DATABASE_URL"),
+    )
 
 def prepare_historical_transactions(dtf: pd.DataFrame) -> pd.DataFrame:
     dtf = dtf.copy()
@@ -44,7 +53,7 @@ def load_historical_transactions(
     )
 
     # 4. Bulk insert commit or rollback if exception
-    with AdminSessionLocal() as session:
+    with create_database_engine().AdminSessionLocal() as session:
         with session.begin():
             session.execute(
                 insert(HistoricalTransaction),

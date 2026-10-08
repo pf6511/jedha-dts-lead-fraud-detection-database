@@ -1,33 +1,31 @@
-import os
-from pathlib import Path
-
-from dotenv import load_dotenv
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
 
-load_dotenv(Path(__file__).resolve().parents[2] / "secrets.env")
 
-DATABASE_URL = os.environ["DATABASE_URL"]
-ADMIN_DATABASE_URL =os.environ["ADMIN_DATABASE_URL"]
+class Database:
+    def __init__(
+        self,
+        database_url: str,
+        admin_database_url: str,
+    ):
+        self.engine = create_engine(
+            database_url,
+            pool_pre_ping=True,
+        )
 
-engine = create_engine(
-    DATABASE_URL,
-    pool_pre_ping=True,
-)
+        self.admin_engine = create_engine(
+            admin_database_url,
+            pool_pre_ping=True,
+        )
 
-admin_engine = create_engine(
-    ADMIN_DATABASE_URL,
-    pool_pre_ping=True,
-)
+        self.SessionLocal = sessionmaker(
+            bind=self.engine,
+            autoflush=False,
+            expire_on_commit=False,
+        )
 
-SessionLocal = sessionmaker(
-    bind=engine,
-    autoflush=False,
-    expire_on_commit=False,
-)
-
-AdminSessionLocal = sessionmaker(
-    bind=admin_engine,
-    autoflush=False,
-    expire_on_commit=False,
-)
+        self.AdminSessionLocal = sessionmaker(
+            bind=self.admin_engine,
+            autoflush=False,
+            expire_on_commit=False,
+        )
