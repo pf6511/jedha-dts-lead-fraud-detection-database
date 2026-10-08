@@ -11,7 +11,7 @@ from fraud_detection_database.models import HistoricalTransaction
 
 from typing import Any, cast
 
-def create_database_engine():
+def get_database_access() -> Database:
     environment = Environment("./secrets.env")
     return Database(
         database_url=environment.env_var("DATABASE_URL"),
@@ -53,7 +53,7 @@ def load_historical_transactions(
     )
 
     # 4. Bulk insert commit or rollback if exception
-    with create_database_engine().AdminSessionLocal() as session:
+    with get_database_access().AdminSessionLocal() as session:
         with session.begin():
             session.execute(
                 insert(HistoricalTransaction),
