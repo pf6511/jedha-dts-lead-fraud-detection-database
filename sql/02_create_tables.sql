@@ -129,6 +129,13 @@ CREATE TABLE IF NOT EXISTS public.predictions (
     CONSTRAINT fk_predictions_model_version
         FOREIGN KEY (model_version_id)
         REFERENCES public.model_versions(model_version_id)
+		
+	CONSTRAINT uq_predictions_transaction_id
+		UNIQUE (transaction_id),
+
+	CONSTRAINT fk_predictions_transaction
+		FOREIGN KEY (transaction_id)
+		REFERENCES public.transactions(transaction_id)
 );
 
 
@@ -150,6 +157,7 @@ CREATE INDEX IF NOT EXISTS idx_predictions_model_version_id
 
 CREATE INDEX IF NOT EXISTS idx_predictions_prediction_timestamp
     ON public.predictions(prediction_timestamp);
+	
 
 	
 
@@ -168,3 +176,19 @@ TO fraud_detection_app;
 GRANT SELECT, INSERT
 ON public.predictions
 TO fraud_detection_app;
+
+GRANT SELECT, INSERT
+ON public.historical_transactions
+TO fraud_detection_admin;
+
+GRANT SELECT, INSERT
+ON public.model_versions
+TO fraud_detection_admin;
+
+GRANT SELECT
+ON public.transactions
+TO fraud_detection_admin;
+
+GRANT SELECT
+ON public.predictions
+TO fraud_detection_admin;
