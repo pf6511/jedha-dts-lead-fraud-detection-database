@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS analytics.daily_fraud_metrics (
 
     generated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     airflow_run_id TEXT,
+	report_timezone TEXT NOT NULL DEFAULT 'Europe/Paris',
 
     CONSTRAINT chk_daily_metrics_period
         CHECK (period_end > period_start),
@@ -38,5 +39,8 @@ TO fraud_detection_admin;
 GRANT SELECT, INSERT, UPDATE
 ON analytics.daily_fraud_metrics
 TO fraud_detection_admin;
+
+GRANT SELECT ON analytics.daily_fraud_metrics
+TO fraud_detection_bi;
 
 COMMIT;
