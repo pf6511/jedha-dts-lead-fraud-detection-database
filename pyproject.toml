@@ -1,10 +1,10 @@
 [project]
 name = "fraud-detection-database"
-version = "0.1.0"
-description = "Add your description here"
+version = "0.2.0"
+description = "Fraud detection database: DDL, roles, ORM and sessions (privacy by design: no personal data stored)"
 readme = "README.md"
 authors = [
-    { name = "pf6511", email = "pfelz@free.fr" }
+    { name = "mygithub", email = "mymail" }
 ]
 requires-python = ">=3.12"
 dependencies = [

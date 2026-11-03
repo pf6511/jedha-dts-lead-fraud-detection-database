@@ -1,30 +1,35 @@
-from datetime import date, datetime
 import uuid
+from datetime import datetime
 
+from sqlalchemy import DateTime, Integer, Numeric, SmallInteger, String, Text, text
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import Date, DateTime, Double, Integer, Numeric, SmallInteger, Text
 from sqlalchemy.orm import Mapped, mapped_column
-
-from sqlalchemy import ForeignKey
-
-from sqlalchemy import text
 
 from .base import Base
 
 
 class Transaction(Base):
+    """Minimised transaction consumed by the real-time system.
+
+    No card number, no direct identifier (name, address), no
+    quasi-identifier (date of birth, city, zip, gender), no coordinates:
+    the processor minimises the payment (fraud_detection_features.privacy)
+    before building this object.
+    """
+
     __tablename__ = "transactions"
 
     transaction_id: Mapped[uuid.UUID] = mapped_column(
-    UUID(as_uuid=True),
-    primary_key=True,
-    server_default=text("gen_random_uuid()"),
-)
+        UUID(as_uuid=True),
+        primary_key=True,
+        server_default=text("gen_random_uuid()"),
+    )
 
+    # Identifier of the transaction in the payment API (unique: deduplication)
     source_trans_num: Mapped[str] = mapped_column(
         Text,
-        ForeignKey("historical_transactions.trans_num"),
         nullable=False,
+        unique=True,
     )
 
     trans_date_trans_time: Mapped[datetime] = mapped_column(
@@ -32,8 +37,15 @@ class Transaction(Base):
         nullable=False,
     )
 
-    cc_num: Mapped[str] = mapped_column(
-        Text,
+    # HMAC-SHA256 pseudonym of the card number
+    card_id: Mapped[str] = mapped_column(
+        String(64),
+        nullable=False,
+    )
+
+    # Last four digits of the card number, display only
+    pan_last4: Mapped[str] = mapped_column(
+        String(4),
         nullable=False,
     )
 
@@ -52,27 +64,11 @@ class Transaction(Base):
         nullable=False,
     )
 
-    first: Mapped[str | None] = mapped_column(Text)
-    last: Mapped[str | None] = mapped_column(Text)
-    gender: Mapped[str | None] = mapped_column(Text)
-
-    street: Mapped[str | None] = mapped_column(Text)
-    city: Mapped[str | None] = mapped_column(Text)
-    state: Mapped[str | None] = mapped_column(Text)
-
-    zip: Mapped[int | None] = mapped_column(Integer)
-
-    lat: Mapped[float | None] = mapped_column(Double)
-    long: Mapped[float | None] = mapped_column(Double)
-
     city_pop: Mapped[int | None] = mapped_column(Integer)
-
+    state: Mapped[str | None] = mapped_column(Text)
     job: Mapped[str | None] = mapped_column(Text)
-    dob: Mapped[date | None] = mapped_column(Date)
 
-    merch_lat: Mapped[float | None] = mapped_column(Double)
-    merch_long: Mapped[float | None] = mapped_column(Double)
-
+    # Label provided by the payment API (simulated confirmed fraud)
     is_fraud: Mapped[int] = mapped_column(
         SmallInteger,
         nullable=False,
@@ -81,4 +77,5 @@ class Transaction(Base):
     received_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,
+        server_default=text("NOW()"),
     )

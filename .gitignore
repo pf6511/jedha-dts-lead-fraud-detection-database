@@ -18,3 +18,7 @@ secrets.env
 # IDE
 .vscode/
 .idea/
+
+# postgresql helm values
+helm/postgresql/postgres-values.yaml
+sql/backup/
