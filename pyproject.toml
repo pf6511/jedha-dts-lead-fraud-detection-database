@@ -1,6 +1,6 @@
 [project]
 name = "fraud-detection-database"
-version = "0.3.0"
+version = "0.4.0"
 description = "Fraud detection database: DDL, roles, ORM and sessions (privacy by design: no personal data stored)"
 readme = "README.md"
 authors = [

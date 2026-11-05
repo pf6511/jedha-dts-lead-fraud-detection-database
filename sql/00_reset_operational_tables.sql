@@ -7,16 +7,16 @@
 --
 -- For an installation from scratch, use 00_drop_all.sql instead.
 --
--- DESTRUCTIVE for transactions, predictions, quarantine, failures
--- and analytics: their data is lost. Then run 01_create_roles.sql,
--- 02_create_tables.sql, 03_create_daily_fraud_metrics.sql and
--- 04_create_processing_tables.sql: model_versions, whose structure
--- is unchanged, is kept as is (CREATE TABLE IF NOT EXISTS).
+-- DESTRUCTIVE for transactions, predictions, quarantine, failures,
+-- analytics and monitoring: their data is lost. Then run the scripts
+-- 01 to 05: model_versions, whose structure is unchanged, is kept as
+-- is (CREATE TABLE IF NOT EXISTS).
 -- ============================================================
 
 BEGIN;
 
 DROP SCHEMA IF EXISTS analytics CASCADE;
+DROP SCHEMA IF EXISTS monitoring CASCADE;
 
 DROP TABLE IF EXISTS public.failed_payments CASCADE;
 DROP TABLE IF EXISTS public.quarantined_payments CASCADE;
